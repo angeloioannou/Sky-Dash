@@ -1,193 +1,174 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Sky Dash</title>
-  <style>
-    body {
-      margin: 0;
-      overflow: hidden;
-      background: linear-gradient(to top, #a18cd1 0%, #fbc2eb 100%);
-      font-family: sans-serif;
-    }
-    canvas {
-      display: block;
-      margin: 0 auto;
-      background: transparent;
-    }
-    #score {
-      position: absolute;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      color: #fff;
-      font-size: 24px;
-      font-weight: bold;
-      text-shadow: 1px 1px 2px #000;
-    }
-  </style>
-</head>
-<body>
-  <div id="score">Score: 0</div>
-  <canvas id="gameCanvas"></canvas>
-  <script>
-    const canvas = document.getElementById('gameCanvas');
-    const ctx = canvas.getContext('2d');
-    let width = window.innerWidth;
-    let height = window.innerHeight;
-    canvas.width = width;
-    canvas.height = height;
+{\rtf1\ansi\ansicpg1252\cocoartf2639
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
 
-    let score = 0;
-    let gameOver = false;
-
-    const player = {
-      x: width / 4,
-      y: height / 2,
-      width: 30,
-      height: 30,
-      color: '#fff',
-      dy: 0,
-      gravity: 0.5,
-      jumpStrength: -10,
-      onGround: false
-    };
-
-    const platforms = [];
-    const stars = [];
-
-    function createPlatform(x, y, width, height) {
-      return { x, y, width, height };
-    }
-
-    function createStar(x, y) {
-      return { x, y, radius: 5 };
-    }
-
-    function initPlatforms() {
-      platforms.push(createPlatform(100, height - 100, 100, 10));
-      platforms.push(createPlatform(300, height - 200, 100, 10));
-      platforms.push(createPlatform(500, height - 150, 100, 10));
-    }
-
-    function drawPlayer() {
-      ctx.fillStyle = player.color;
-      ctx.fillRect(player.x, player.y, player.width, player.height);
-    }
-
-    function drawPlatforms() {
-      ctx.fillStyle = '#fff';
-      platforms.forEach(p => {
-        ctx.fillRect(p.x, p.y, p.width, p.height);
-      });
-    }
-
-    function drawStars() {
-      ctx.fillStyle = 'yellow';
-      stars.forEach(s => {
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
-        ctx.fill();
-      });
-    }
-
-    function update() {
-      if (gameOver) return;
-
-      player.dy += player.gravity;
-      player.y += player.dy;
-
-      // Collision detection
-      player.onGround = false;
-      platforms.forEach(p => {
-        if (
-          player.x < p.x + p.width &&
-          player.x + player.width > p.x &&
-          player.y + player.height < p.y + player.dy &&
-          player.y + player.height + player.dy >= p.y
-        ) {
-          player.y = p.y - player.height;
-          player.dy = 0;
-          player.onGround = true;
-        }
-      });
-
-      // Move platforms and stars
-      platforms.forEach(p => {
-        p.x -= 2;
-      });
-      stars.forEach(s => {
-        s.x -= 2;
-      });
-
-      // Remove off-screen platforms and stars
-      if (platforms[0].x + platforms[0].width < 0) {
-        platforms.shift();
-        const lastPlatform = platforms[platforms.length - 1];
-        const newPlatformX = lastPlatform.x + 200 + Math.random() * 100;
-        const newPlatformY = height - 100 - Math.random() * 200;
-        platforms.push(createPlatform(newPlatformX, newPlatformY, 100, 10));
-
-        // Add a star above the new platform
-        if (Math.random() < 0.5) {
-          stars.push(createStar(newPlatformX + 50, newPlatformY - 20));
-        }
-      }
-
-      // Collect stars
-      stars.forEach((s, index) => {
-        if (
-          player.x < s.x + s.radius &&
-          player.x + player.width > s.x - s.radius &&
-          player.y < s.y + s.radius &&
-          player.y + player.height > s.y - s.radius
-        ) {
-          score += 5;
-          stars.splice(index, 1);
-        }
-      });
-
-      // Check for game over
-      if (player.y > height) {
-        gameOver = true;
-        alert('Game Over! Your score: ' + score);
-        window.location.reload();
-      }
-    }
-
-    function draw() {
-      ctx.clearRect(0, 0, width, height);
-      drawPlayer();
-      drawPlatforms();
-      drawStars();
-      document.getElementById('score').innerText = 'Score: ' + score;
-    }
-
-    function gameLoop() {
-      update();
-      draw();
-      if (!gameOver) {
-        requestAnimationFrame(gameLoop);
-      }
-    }
-
-    window.addEventListener('resize', () => {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
-    });
-
-    window.addEventListener('touchstart', () => {
-      if (player.onGround) {
-        player.dy = player.jumpStrength;
-        score += 1;
-      }
-    });
-
-    initPlatforms();
-    gameLoop();
-  </script>
-</body>
-</html>
+\f0\fs24 \cf0 // Base canvas setup and variables\
+const canvas = document.getElementById('gameCanvas');\
+const ctx = canvas.getContext('2d');\
+\
+let player = \{\
+  x: 50,\
+  y: canvas.height - 100,\
+  width: 30,\
+  height: 30,\
+  velocityY: 0,\
+  jumping: false,\
+  speed: 3\
+\};\
+\
+let gravity = 0.5;\
+let platforms = [];\
+let powerUps = [];\
+let obstacles = [];\
+let score = 0;\
+let starsCollected = 0;\
+let comboCount = 0;\
+let level = 1;\
+const achievements = [\
+  \{ name: 'First Jump', condition: () => score >= 10 \},\
+  \{ name: 'Star Collector', condition: () => starsCollected >= 50 \}\
+];\
+\
+const jumpSound = new Audio('jump.mp3');\
+const collectSound = new Audio('collect.mp3');\
+\
+function playJumpSound() \{\
+  jumpSound.play();\
+\}\
+\
+function playCollectSound() \{\
+  collectSound.play();\
+\}\
+\
+function generatePlatform() \{\
+  const platformWidth = Math.random() * (150 - 50) + 50;\
+  const platformX = canvas.width;\
+  const platformY = Math.random() * (canvas.height - 200) + 100;\
+  platforms.push(\{ x: platformX, y: platformY, width: platformWidth, height: 10 \});\
+\}\
+\
+function generatePowerUp() \{\
+  const powerUpTypes = ['speed', 'shield', 'doublePoints'];\
+  const type = powerUpTypes[Math.floor(Math.random() * powerUpTypes.length)];\
+  powerUps.push(\{ x: canvas.width, y: Math.random() * canvas.height, type \});\
+\}\
+\
+function generateObstacle() \{\
+  const obstacleY = Math.random() * (canvas.height - 50);\
+  obstacles.push(\{ x: canvas.width, y: obstacleY, width: 20, height: 50 \});\
+\}\
+\
+function updateCombo(success) \{\
+  if (success) \{\
+    comboCount++;\
+    score += comboCount * 10;\
+  \} else \{\
+    comboCount = 0;\
+  \}\
+\}\
+\
+function checkAchievements() \{\
+  achievements.forEach(achievement => \{\
+    if (achievement.condition() && !achievement.unlocked) \{\
+      achievement.unlocked = true;\
+      alert(`Achievement Unlocked: $\{achievement.name\}`);\
+    \}\
+  \});\
+\}\
+\
+function increaseDifficulty() \{\
+  player.speed += 0.5;\
+  gravity += 0.05;\
+\}\
+\
+function changeBackground() \{\
+  const backgrounds = ['bg1.png', 'bg2.png', 'bg3.png'];\
+  document.body.style.backgroundImage = `url($\{backgrounds[level % backgrounds.length]\})`;\
+\}\
+\
+function checkLevelUp() \{\
+  if (score >= level * 100) \{\
+    level++;\
+    increaseDifficulty();\
+    changeBackground();\
+  \}\
+\}\
+\
+function resizeCanvas() \{\
+  canvas.width = window.innerWidth;\
+  canvas.height = window.innerHeight;\
+\}\
+\
+function gameLoop() \{\
+  ctx.clearRect(0, 0, canvas.width, canvas.height);\
+\
+  // Gravity and movement\
+  player.velocityY += gravity;\
+  player.y += player.velocityY;\
+\
+  if (player.y > canvas.height - player.height) \{\
+    player.y = canvas.height - player.height;\
+    player.jumping = false;\
+  \}\
+\
+  // Draw player\
+  ctx.fillStyle = 'blue';\
+  ctx.fillRect(player.x, player.y, player.width, player.height);\
+\
+  // Platforms\
+  platforms.forEach((plat, index) => \{\
+    plat.x -= player.speed;\
+    ctx.fillStyle = 'green';\
+    ctx.fillRect(plat.x, plat.y, plat.width, plat.height);\
+\
+    // Collision detection\
+    if (\
+      player.x < plat.x + plat.width &&\
+      player.x + player.width > plat.x &&\
+      player.y + player.height < plat.y + 10 &&\
+      player.y + player.height > plat.y\
+    ) \{\
+      player.y = plat.y - player.height;\
+      player.jumping = false;\
+      player.velocityY = 0;\
+    \}\
+\
+    if (plat.x + plat.width < 0) platforms.splice(index, 1);\
+  \});\
+\
+  // Spawn logic\
+  if (Math.random() < 0.02) generatePlatform();\
+  if (Math.random() < 0.01) generatePowerUp();\
+  if (Math.random() < 0.015) generateObstacle();\
+\
+  // Update level\
+  checkLevelUp();\
+  checkAchievements();\
+\
+  requestAnimationFrame(gameLoop);\
+\}\
+\
+window.addEventListener('resize', resizeCanvas);\
+resizeCanvas();\
+\
+document.addEventListener('keydown', (e) => \{\
+  if (e.code === 'Space' && !player.jumping) \{\
+    player.velocityY = -10;\
+    player.jumping = true;\
+    playJumpSound();\
+  \}\
+\});\
+\
+canvas.addEventListener('touchstart', function(e) \{\
+  if (!player.jumping) \{\
+    player.velocityY = -10;\
+    player.jumping = true;\
+    playJumpSound();\
+  \}\
+\});\
+\
+gameLoop();\
+}
